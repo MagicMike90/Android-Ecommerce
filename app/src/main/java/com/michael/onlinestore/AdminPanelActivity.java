@@ -16,11 +16,9 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -84,30 +82,30 @@ public class AdminPanelActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        View header = navigationView.getHeaderView(0);
-        TextView userName = (TextView) header.findViewById(R.id.nav_userName);
-        Typeface face = Typeface.createFromAsset(getAssets(),
-                "fonts/PKMN_RBYGSC.ttf");
-        userName.setTypeface(face);
+//        View header = navigationView.getHeaderView(0);
+//        TextView userName = (TextView) header.findViewById(R.id.nav_userName);
+//        Typeface face = Typeface.createFromAsset(getAssets(),
+//                "fonts/zorque.ttf");
+//        userName.setTypeface(face);
 
 
-
-        Menu m = navigationView.getMenu();
-        for (int i=0;i<m.size();i++) {
-            MenuItem mi = m.getItem(i);
-
-            //for aapplying a font to subMenu ...
-            SubMenu subMenu = mi.getSubMenu();
-            if (subMenu!=null && subMenu.size() >0 ) {
-                for (int j=0; j <subMenu.size();j++) {
-                    MenuItem subMenuItem = subMenu.getItem(j);
-                    applyFontToMenuItem(subMenuItem);
-                }
-            }
-
-            //the method we have create in activity
-            applyFontToMenuItem(mi);
-        }
+//
+//        Menu m = navigationView.getMenu();
+//        for (int i=0;i<m.size();i++) {
+//            MenuItem mi = m.getItem(i);
+//
+//            //for aapplying a font to subMenu ...
+//            SubMenu subMenu = mi.getSubMenu();
+//            if (subMenu!=null && subMenu.size() >0 ) {
+//                for (int j=0; j <subMenu.size();j++) {
+//                    MenuItem subMenuItem = subMenu.getItem(j);
+//                    applyFontToMenuItem(subMenuItem);
+//                }
+//            }
+//
+//            //the method we have create in activity
+//            applyFontToMenuItem(mi);
+//        }
 
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -115,7 +113,7 @@ public class AdminPanelActivity extends AppCompatActivity
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
     private void applyFontToMenuItem(MenuItem mi) {
-        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/PKMN_RBYGSC.ttf");
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/zorque.ttf");
         SpannableString mNewTitle = new SpannableString(mi.getTitle());
         mNewTitle.setSpan(new CustomTypefaceSpan("" , font), 0 , mNewTitle.length(),  Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         mi.setTitle(mNewTitle);

@@ -3,4 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="navHeader">#F7C873</color>
+    <color name="navHeader2">#434343</color>
+    <color name="navMenuBg">#FAEBCD</color>
+    <color name="navMenuBg2">#F8F8F8</color>
+
 </resources>
