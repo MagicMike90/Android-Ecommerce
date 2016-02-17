@@ -8,6 +8,20 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <!--create product-->
+    <string name="title_activity_create_product">CreateProductActivity</string>
+    <string name="product_title_label">Title</string>
+    <string name="product_title_hint">Enter a title for the product</string>
+    <string name="product_price_label">Price</string>
+    <string name="product_price_hint">Enter the price for the product</string>
+
+    <string name="product_description_label">Description</string>
+    <string name="product_description_hint">Enter the price for the product</string>
+
+    <string name="action_create">Create</string>
+    <string name="title_activity_maps">Map</string>
 </resources>
