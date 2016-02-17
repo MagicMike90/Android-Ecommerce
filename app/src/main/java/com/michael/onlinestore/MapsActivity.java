@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -31,9 +32,11 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.michael.onlinestore.fragment.TouchableWrapper;
+import com.michael.onlinestore.utils.ImagePostProcessor;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, SensorEventListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, SensorEventListener,TouchableWrapper.TouchActionDown, TouchableWrapper.TouchActionUp {
     public static String TAG = MapsActivity.class.getName();
 
     private GoogleMap mMap;
@@ -104,6 +107,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         imgMyLocation = (ImageView) findViewById(R.id.imgMyLocation);
+        imgMyLocation.setImageBitmap(ImagePostProcessor.getInstance(this).glowProcess(R.drawable.ic_room_black_24dp));
         imgMyLocation.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -139,6 +143,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d(TAG, "onMapReady");
 
 
+
+        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition cameraPosition) {
+                Log.d(TAG, "cameraPosition: ====" + cameraPosition.toString());
+            }
+        });
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                Log.d(TAG, "LatLng: ====" + latLng.toString());
+            }
+        });
     }
 
     protected void startLocationUpdates() {
@@ -151,18 +169,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             //  mLocationRequest.setNumUpdates(1);
             mLocationRequest.setInterval(5000);
 
-
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
     }
-
-    private void updateMap() {
-
-
-    }
-
     protected void onStart() {
-        Log.d(TAG,"onStart");
+        Log.d(TAG, "onStart");
         mGoogleApiClient.connect();
 
         super.onStart();
@@ -230,15 +241,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
 
 
-
             LatLng center = new LatLng(currentLat, currentLng);
-            mMarker = mMap.addMarker(new MarkerOptions().position(center).anchor(0.5f, 0.5f).flat(true).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_navigation_black_24dp)).title("I am here!"));
+            if (mMarker == null) {
+                MarkerOptions markerOptions = new MarkerOptions().position(center).anchor(0.5f, 0.5f).flat(true).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_navigation_black_24dp)).title("I am here!");
+                mMarker = mMap.addMarker(markerOptions);
+            }
 
-            CircleOptions circleOptions = new CircleOptions()
-                    .center(center)
-                    .radius(10).fillColor(0x5500ff00).strokeWidth(0);
-            mCircle = mMap.addCircle(circleOptions);
-
+            if (mCircle == null) {
+                CircleOptions circleOptions = new CircleOptions()
+                        .center(center)
+                        .radius(10).fillColor(0x5500ff00).strokeWidth(0);
+                mCircle = mMap.addCircle(circleOptions);
+            }
 
             mMap.moveCamera(CameraUpdateFactory.newLatLng(center));
 
@@ -269,18 +283,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng center = new LatLng(currentLat, currentLng);
         mMarker.setPosition(center);
         mCircle.setCenter(center);
-        // mMap.moveCamera();
 
-        //animateMarker(mMarker,location);
-        //Log.d(TAG, "mCurrentLat: " + mCurrentLat + " mCurrentLng: " + mCurrentLng);
-        //updateMap();
-        mLastLocation =  location;
-//
-//        CameraPosition cameraPosition = new CameraPosition.Builder()
-//                .target(center)      // Sets the center of the map to Mountain View
-//                .zoom(mZoomLevel)                   // Sets the zoom
-//                .build();                   // Creates a CameraPosition from the builder
-//        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        mLastLocation = location;
+
+        Log.d(TAG,"onLocationChanged");
     }
 
 
@@ -329,6 +335,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
+    @Override
+    public void onTouchDown(MotionEvent event) {
+        Log.d(TAG,"onTouchDown");
+    }
 
-
+    @Override
+    public void onTouchUp(MotionEvent event) {
+        Log.d(TAG,"onTouchUp");
+    }
 }

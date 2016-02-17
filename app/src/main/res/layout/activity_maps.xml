@@ -6,12 +6,19 @@
     android:orientation="vertical">
 
 
+    <!--<fragment-->
+        <!--android:id="@+id/map"-->
+        <!--android:name="com.google.android.gms.maps.SupportMapFragment"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--tools:context="com.michael.onlinestore.MapsActivity" />-->
     <fragment
         android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:name="com.michael.onlinestore.fragment.TouchableSupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.michael.onlinestore.MapsActivity" />
+
 
     <LinearLayout
         android:layout_width="fill_parent"

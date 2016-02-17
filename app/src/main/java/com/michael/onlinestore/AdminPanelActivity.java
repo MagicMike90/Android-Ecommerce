@@ -2,6 +2,7 @@ package com.michael.onlinestore;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -11,17 +12,22 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.michael.onlinestore.admin.fragment.DashboardFragment;
-import com.michael.onlinestore.admin.fragment.UploadProductFragment;
+import com.michael.onlinestore.fragment.DashboardFragment;
+import com.michael.onlinestore.fragment.UploadProductFragment;
+import com.michael.onlinestore.utils.CustomTypefaceSpan;
 
 public class AdminPanelActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, UploadProductFragment.OnFragmentInteractionListener{
@@ -72,14 +78,48 @@ public class AdminPanelActivity extends AppCompatActivity
         drawer.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
+
+
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        View header = navigationView.getHeaderView(0);
+        TextView userName = (TextView) header.findViewById(R.id.nav_userName);
+        Typeface face = Typeface.createFromAsset(getAssets(),
+                "fonts/PKMN_RBYGSC.ttf");
+        userName.setTypeface(face);
+
+
+
+        Menu m = navigationView.getMenu();
+        for (int i=0;i<m.size();i++) {
+            MenuItem mi = m.getItem(i);
+
+            //for aapplying a font to subMenu ...
+            SubMenu subMenu = mi.getSubMenu();
+            if (subMenu!=null && subMenu.size() >0 ) {
+                for (int j=0; j <subMenu.size();j++) {
+                    MenuItem subMenuItem = subMenu.getItem(j);
+                    applyFontToMenuItem(subMenuItem);
+                }
+            }
+
+            //the method we have create in activity
+            applyFontToMenuItem(mi);
+        }
+
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
-
+    private void applyFontToMenuItem(MenuItem mi) {
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/PKMN_RBYGSC.ttf");
+        SpannableString mNewTitle = new SpannableString(mi.getTitle());
+        mNewTitle.setSpan(new CustomTypefaceSpan("" , font), 0 , mNewTitle.length(),  Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        mi.setTitle(mNewTitle);
+    }
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -136,22 +176,23 @@ public class AdminPanelActivity extends AppCompatActivity
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.frame, fragment);
             fragmentTransaction.commit();
-        } else if (id == R.id.nav_camera) {
+        } else if (id == R.id.nav_search) {
+            Intent i =  new Intent(this,MapsActivity.class);
+            startActivity(i);
+        } else if (id == R.id.nav_notification) {
             //Toast.makeText(getApplicationContext(), "Inbox Selected", Toast.LENGTH_SHORT).show();
             UploadProductFragment fragment = new UploadProductFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.frame, fragment);
             fragmentTransaction.commit();
-        } else if (id == R.id.nav_gallery) {
-            Intent i =  new Intent(this,MapsActivity.class);
-            startActivity(i);
-        } else if (id == R.id.nav_slideshow) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_chat) {
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_help) {
+
+        } else if (id == R.id.nav_about) {
 
         }
 

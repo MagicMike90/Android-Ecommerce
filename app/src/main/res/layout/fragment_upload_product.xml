@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".admin.fragment.UploadProductFragment">
+    tools:context=".fragment.UploadProductFragment">
 
     <ScrollView
         android:id="@+id/create_product_form"
