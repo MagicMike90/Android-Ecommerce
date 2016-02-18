@@ -25,5 +25,4 @@ public class TouchableSupportMapFragment extends SupportMapFragment {
     public View getView() {
         return mContentView;
     }
-
 }

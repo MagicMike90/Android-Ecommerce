@@ -8,16 +8,16 @@
             android:title="@string/nav_home" />
         <item
             android:id="@+id/nav_search"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_search_white_24dp"
             android:title="@string/nav_search" />
 
         <item
             android:id="@+id/nav_notification"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_event_note_white_24dp"
             android:title="@string/nav_notification" />
         <item
             android:id="@+id/nav_chat"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_chat_white_24dp"
             android:title="@string/nav_chat" />
     </group>
 
@@ -25,15 +25,15 @@
         <menu>
             <item
                 android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
+                android:icon="@drawable/ic_share_white_24dp"
                 android:title="@string/nav_share" />
             <item
                 android:id="@+id/nav_help"
-                android:icon="@drawable/ic_menu_gallery"
+                android:icon="@drawable/ic_help_white_24dp"
                 android:title="@string/nav_help" />
             <item
                 android:id="@+id/nav_about"
-                android:icon="@drawable/ic_menu_gallery"
+                android:icon="@drawable/ic_info_white_24dp"
                 android:title="@string/nav_about" />
         </menu>
     </item>

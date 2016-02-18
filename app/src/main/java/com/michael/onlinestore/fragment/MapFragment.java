@@ -1,8 +1,8 @@
-package com.michael.onlinestore;
+package com.michael.onlinestore.fragment;
+
 
 import android.Manifest;
-import android.content.DialogInterface;
-import android.content.Intent;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -10,12 +10,13 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -27,7 +28,6 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
@@ -35,15 +35,21 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.michael.onlinestore.fragment.TouchableWrapper;
+import com.michael.onlinestore.MapsActivity;
+import com.michael.onlinestore.R;
 import com.michael.onlinestore.utils.ImagePostProcessor;
 
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class MapFragment extends TouchableSupportMapFragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, SensorEventListener, TouchableWrapper.TouchActionDown, TouchableWrapper.TouchActionUp {
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, SensorEventListener, TouchableWrapper.TouchActionDown, TouchableWrapper.TouchActionUp {
     public static String TAG = MapsActivity.class.getName();
 
-    private GoogleMap mMap;
+    private Context mContext;
 
+
+    private GoogleMap mMap;
     private String provider;
     private GoogleApiClient mGoogleApiClient;
 
@@ -77,29 +83,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ImageView imgMyLocation;
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+    public MapFragment() {
+    }
 
+
+    public static MapFragment newInstance(Context ctx) {
+        MapFragment fragment = new MapFragment();
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mContext =  getActivity();
 
         if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(MapsActivity.this)
+            mGoogleApiClient = new GoogleApiClient.Builder(mContext)
+                    .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
                     .build();
 
         }
 
-        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensorManager = (SensorManager) mContext.getSystemService(mContext.SENSOR_SERVICE);
         sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorMagneticField = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-
 
         valuesAccelerometer = new float[3];
         valuesMagneticField = new float[3];
@@ -107,10 +117,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         matrixR = new float[9];
         matrixI = new float[9];
         matrixValues = new float[3];
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 
 
-        imgMyLocation = (ImageView) findViewById(R.id.imgMyLocation);
-        imgMyLocation.setImageBitmap(ImagePostProcessor.getInstance(this).glowProcess(R.drawable.ic_room_black_24dp));
+        View view = inflater.inflate(R.layout.activity_maps, container, false);
+
+        imgMyLocation = (ImageView) view.findViewById(R.id.imgMyLocation);
+        imgMyLocation.setImageBitmap(ImagePostProcessor.getInstance(mContext).glowProcess(R.drawable.ic_room_black_24dp));
         imgMyLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,31 +135,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-//        LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
-//        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)||!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ) {
-//            buildAlertMessageNoGps();
-//        }
-    }
 
-    /**
-     * Add alert message
-     */
-    private void buildAlertMessageNoGps() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
-                .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        dialog.cancel();
-                    }
-                });
-        final AlertDialog alert = builder.create();
-        alert.show();
+        return view;
     }
 
     private void getMyLocation() {
@@ -172,7 +166,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     protected void startLocationUpdates() {
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mLocationRequest = LocationRequest.create();
             mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -184,7 +178,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    protected void onStart() {
+    public void onStart() {
         Log.d(TAG, "onStart");
         mGoogleApiClient.connect();
 
@@ -192,7 +186,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         sensorManager.registerListener(this,
                 sensorAccelerometer,
                 SensorManager.SENSOR_DELAY_NORMAL);
@@ -200,7 +194,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 sensorMagneticField,
                 SensorManager.SENSOR_DELAY_NORMAL);
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             if (mGoogleApiClient.isConnected()) {
                 LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
@@ -210,7 +204,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
+
 
         sensorManager.unregisterListener(this,
                 sensorAccelerometer);
@@ -218,7 +213,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 sensorMagneticField);
 
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             if (mGoogleApiClient.isConnected()) {
                 LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
@@ -227,7 +222,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onPause();
     }
 
-    protected void onStop() {
+
+    public void onStop() {
         mGoogleApiClient.disconnect();
         super.onStop();
     }
@@ -235,7 +231,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onConnected(Bundle bundle) {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
 
 

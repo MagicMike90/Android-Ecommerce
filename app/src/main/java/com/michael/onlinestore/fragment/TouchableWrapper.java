@@ -17,6 +17,7 @@ public class TouchableWrapper extends FrameLayout implements GestureDetector.OnG
     private TouchActionDown mTouchActionDown;
     private TouchActionUp mTouchActionUp;
 
+
     public TouchableWrapper(Context context) {
         super(context);
         // Force the host activity to implement the TouchActionDown Interface
