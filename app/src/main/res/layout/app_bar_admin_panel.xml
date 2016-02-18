@@ -8,6 +8,7 @@
     tools:context=".MainActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -24,13 +25,33 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textStyle="bold"
+                android:text="Monster World"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/main_title_text"
-                android:text="Monster World" />
+                android:textStyle="bold" />
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
+
+
+    <FrameLayout
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
+
+
+    <ImageView
+        android:id="@+id/imgMyLocation"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_room_black_24dp" />
+
 
     <include layout="@layout/content_main" />
 

@@ -1,6 +1,7 @@
 package com.michael.onlinestore;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -11,7 +12,9 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -26,6 +29,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -51,16 +55,22 @@ import com.michael.onlinestore.fragment.DashboardFragment;
 import com.michael.onlinestore.fragment.TouchableSupportMapFragment;
 import com.michael.onlinestore.fragment.TouchableWrapper;
 import com.michael.onlinestore.fragment.UploadProductFragment;
+import com.michael.onlinestore.utils.AndroidUtils;
 import com.michael.onlinestore.utils.CustomTypefaceSpan;
 import com.michael.onlinestore.utils.ImagePostProcessor;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, UploadProductFragment.OnFragmentInteractionListener,
-        OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, SensorEventListener, TouchableWrapper.TouchActionDown, TouchableWrapper.TouchActionUp {
+        OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        LocationListener, SensorEventListener,
+        TouchableWrapper.TouchActionDown, TouchableWrapper.TouchActionUp,
+TouchableWrapper.TouchActionScroll{
 
     public static String TAG = MapsActivity.class.getName();
 
     private ActionBarDrawerToggle mDrawerToggle;
+    private AppBarLayout mAppBarLayout;
     private Toolbar mToolbar;
 
 
@@ -103,6 +113,10 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_panel);
+
+        mAppBarLayout= (AppBarLayout)findViewById(R.id.app_bar);
+
+
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -112,7 +126,7 @@ public class MainActivity extends AppCompatActivity
         TouchableSupportMapFragment fragment = new TouchableSupportMapFragment();
         fragment.getMapAsync(this);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.frame, fragment);
+        fragmentTransaction.add(R.id.map, fragment);
         fragmentTransaction.commit();
 
 
@@ -163,7 +177,6 @@ public class MainActivity extends AppCompatActivity
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API).addApi(AppIndex.API)
                     .build();
-
         }
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -514,14 +527,29 @@ public class MainActivity extends AppCompatActivity
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void toolbarSetElevation(float elevation) {
+        float TOOLBAR_ELEVATION = 14f;
+        if (AndroidUtils.isLollipop()) {
+            mToolbar.setElevation(elevation == 0 ? 0 : TOOLBAR_ELEVATION);
+        }
+    }
 
     @Override
     public void onTouchDown(MotionEvent event) {
         Log.d(TAG, "onTouchDown");
+        mAppBarLayout.animate().translationY(-mToolbar.getHeight()).setInterpolator(new LinearInterpolator()).setDuration(180).start();
     }
 
     @Override
     public void onTouchUp(MotionEvent event) {
         Log.d(TAG, "onTouchUp");
+        mAppBarLayout.animate().translationY(0).setInterpolator(new LinearInterpolator()).setDuration(180).start();
+    }
+
+    @Override
+    public void onTouchScroll(MotionEvent event) {
+        Log.d(TAG, "onTouchScroll");
+
     }
 }

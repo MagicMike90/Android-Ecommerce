@@ -16,6 +16,7 @@ public class TouchableWrapper extends FrameLayout implements GestureDetector.OnG
 
     private TouchActionDown mTouchActionDown;
     private TouchActionUp mTouchActionUp;
+    private TouchActionScroll mTouchActionScroll;
 
 
     public TouchableWrapper(Context context) {
@@ -35,7 +36,13 @@ public class TouchableWrapper extends FrameLayout implements GestureDetector.OnG
                     + " must implement mTouchActionUp");
         }
 
-
+        // Force the host activity to implement the TouchActionDown Interface
+        try {
+            mTouchActionScroll = (TouchActionScroll) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement mTouchActionUp");
+        }
 
         // Instantiate the gesture detector with the
         // application context and an implementation of
@@ -48,13 +55,19 @@ public class TouchableWrapper extends FrameLayout implements GestureDetector.OnG
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
+        //Log.d(DEBUG_TAG, "onDown: " + event.toString());
         switch (event.getAction()) {
+
             case MotionEvent.ACTION_DOWN:
                 mTouchActionDown.onTouchDown(event);
                 break;
             case MotionEvent.ACTION_UP:
                 mTouchActionUp.onTouchUp(event);
                 break;
+            case MotionEvent.ACTION_SCROLL:
+                mTouchActionScroll.onTouchScroll(event);
+                break;
+
         }
         return super.dispatchTouchEvent(event);
     }
@@ -127,5 +140,7 @@ public class TouchableWrapper extends FrameLayout implements GestureDetector.OnG
     public interface TouchActionUp {
         public void onTouchUp(MotionEvent event);
     }
-
+    public interface TouchActionScroll {
+        public void onTouchScroll(MotionEvent event);
+    }
 }
