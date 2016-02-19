@@ -13,8 +13,16 @@ public class TouchableSupportMapFragment extends SupportMapFragment {
     public TouchableWrapper mTouchView;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent,
                              Bundle savedInstanceState) {
+
+
         mContentView = super.onCreateView(inflater, parent, savedInstanceState);
         mTouchView = new TouchableWrapper(getActivity());
         mTouchView.addView(mContentView);
