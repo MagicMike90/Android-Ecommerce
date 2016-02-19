@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -77,10 +78,9 @@ public class LocationServiceController implements LocationListener {
         LatLng center = new LatLng(currentLat, currentLng);
 
         if (mMarker == null) {
+            Log.d(TAG,"add marker");
             MarkerOptions markerOptions = new MarkerOptions().position(center).anchor(0.5f, 0.5f).flat(true).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_navigation_black_24dp)).title("I am here!");
             mMarker = mMap.addMarker(markerOptions);
-
-
         } else {
             mMarker.setPosition(center);
         }

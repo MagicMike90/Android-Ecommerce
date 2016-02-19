@@ -117,6 +117,9 @@ public class MainActivity extends AppCompatActivity
 //            applyFontToMenuItem(mi);
 //        }
 
+
+
+
         Log.d(TAG, "onCreate");
         //intialise the map
         initMap();
@@ -125,6 +128,13 @@ public class MainActivity extends AppCompatActivity
     private void initMap() {
         mGoogleClientCtr = GoogleClientController.getInstance(this);
         //mSensorCtr = SensorServiceController.getInstance(this);
+//        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+//                .addLocationRequest(mLocationRequestHighAccuracy)
+//                .addLocationRequest(mLocationRequestBalancedPowerAccuracy);
+//        builder.setNeedBle(true);
+
+//        PendingResult<LocationSettingsResult> result =
+//                LocationServices.SettingsApi.checkLocationSettings(mGoogleClientCtr.getGoogleApiClient(), builder.build());
 
         imgMyLocation = (ImageView) findViewById(R.id.imgMyLocation);
         imgMyLocation.setImageBitmap(ImagePostProcessor.getInstance(this).glowProcess(R.drawable.ic_room_black_24dp));

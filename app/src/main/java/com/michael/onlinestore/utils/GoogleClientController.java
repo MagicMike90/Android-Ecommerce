@@ -120,6 +120,9 @@ public class GoogleClientController implements GoogleApiClient.ConnectionCallbac
         mLocationCtr.removeLocationUpdate();
     }
 
+    public GoogleApiClient getGoogleApiClient(){
+        return  mGoogleApiClient;
+    }
 
 
     public void getMyLocation() {
