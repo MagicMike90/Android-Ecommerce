@@ -163,6 +163,5 @@ public class LocationServiceController implements LocationListener {
 
         mLocation = location;
     }
-
 }
 

@@ -34,4 +34,11 @@
     <string name="nav_share">Share</string>
     <string name="nav_help">Help</string>
     <string name="nav_about">About</string>
+
+    <!--Permission -->
+    <string name="gps_network_not_enabled">Location Service is not enabled</string>
+    <string name="open_location_settings">Would you like to turn it on?</string>
+    <string name="open_location_alert_dismiss">Dismiss</string>
+
+
 </resources>
